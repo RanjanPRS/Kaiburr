@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-manager-deployment
+  labels:
+    app: task-manager
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: task-manager
+  template:
+    metadata:
+      labels:
+        app: task-manager
+    spec:
+      containers:
+        - name: task-manager
+          image: ranjanprs/task-manager-app:v1
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: "mongodb://admin:password@mongodb-service:27017/taskdb?authSource=admin"
