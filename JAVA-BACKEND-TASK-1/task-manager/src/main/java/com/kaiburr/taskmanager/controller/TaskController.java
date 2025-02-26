@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.*;import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin(origins = "http://localhost:3000")  // Allow frontend access
 @RestController
 @RequestMapping("/tasks")  // Base endpoint for task management
 public class TaskController {
