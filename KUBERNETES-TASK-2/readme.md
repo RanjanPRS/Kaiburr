@@ -1,6 +1,6 @@
 # Kubernetes Deployment - Task 2
 
-This part of the Kaiburr Internship Selection Process involves containerizing the Task Manager API and deploying it to Kubernetes. The application runs inside a Minikube cluster and uses a BusyBox pod to execute tasks dynamically. MongoDB is deployed with Persistent Volumes (PV) to ensure data consistency.
+This part involves containerizing the Task Manager App and deploying it to Kubernetes. The application runs inside a Minikube cluster and uses a BusyBox pod to execute tasks dynamically. MongoDB is deployed with Persistent Volumes (PV) to ensure data consistency.
 
 ### Cluster Setup
 
@@ -93,14 +93,14 @@ A Persistent Volume (PV) is used to store MongoDB data even after the pod is del
 
 **Testing Process:**
 
-Delete the MongoDB Pod.
+> Delete the MongoDB Pod.
 ```bash
 k describe pvc/<mongo-pvc>
 k delete po/<mongo-pod-name>
 ```
 The ReplicaSet ensures that the pod is recreated successfully
 
-Check if the data still exists in MongoDB
+> Check if the data still exists in MongoDB
 
 ```bash
 k get pod
