@@ -31,13 +31,13 @@ docker push myrepo/taskmanager:latest
 
 The following Kubernetes objects were used:
 
-Deployment: Runs the Task Manager API
+> Deployment: Runs the Task Manager API
 
-Service: Exposes the API (Type: NodePort)
+> Service: Exposes the API (Type: NodePort)
 
-MongoDB Deployment & Service: Runs MongoDB and exposes it internally.
+> MongoDB Deployment & Service: Runs MongoDB and exposes it internally.
 
-Persistent Volume: Ensures MongoDB data persists.
+> Persistent Volume: Ensures MongoDB data persists.
 
 ```bash
 k get all
@@ -111,3 +111,8 @@ db.tasks.find().pretty() // to view if the data still exists even after the pod 
 ![pvc2](SCREENSHOTS/mongo-pvc2.png)
 ![pvc3](SCREENSHOTS/mongo-pvc3.png)
 
+### Conclusion:
+
+> The Task Manager app was successfully containerized and deployed on Minikube.
+> BusyBox pods were used to dynamically execute tasks.
+> MongoDB data persisted even after pod deletion using Persistent Volumes.
