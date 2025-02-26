@@ -1,52 +1,113 @@
-# Kubernetes Task Manager App- Setup
+# Kubernetes Deployment - Task 2
 
-## Overview
-The Task Manager App developed in the first task was containerized and deployed onto a kubernetes cluster, i.e minikube
+This part of the Kaiburr Internship Selection Process involves containerizing the Task Manager API and deploying it to Kubernetes. The application runs inside a Minikube cluster and uses a BusyBox pod to execute tasks dynamically. MongoDB is deployed with Persistent Volumes (PV) to ensure data consistency.
 
-## Containerization
-Tool Used: Docker
+### Cluster Setup
 
-The Docker image for the Task Manager application was built and pushed to Docker Hub.
+The **Kubernetes cluster** was set up on my local machine using **Minikube v1.33.1**.
+The **Container Runtime Interface (CRI)** used is **Docker**.
 
-Base Image Used: openjdk:17-jdk-slim
-
-#### Docker Commands Used:
-
-```sh
-docker build -t ranjanprs/task-manager-app:latest .
-docker push ranjanprs/task-manager-app:latest
-docker login
-docker push ranjanprs/task-manager-app:latest
+```bash
+alias k=kubectl
+minikube status
 ```
+![status](SCREENSHOTS/minikube-status.png)
 
-#### Docker Hub Image Link: https://hub.docker.com/repository/docker/ranjanprs/task-manager-app/general
+### Containerizing the Application
 
-## Kubernetes Cluster Setup
+**Tool Used: Docker**
 
-Minikube v1.33.1
+The Task Manager API was packaged into a Docker image.
 
-Docker - Container Runtime Interface (CRI)
+**Build & Push Docker Image**
+```bash
+docker build -t myrepo/taskmanager:latest .
+docker push myrepo/taskmanager:latest
+```
+![build](SCREENSHOTS/dockerbuild-cmd.png)
+![img](SCREENSHOTS/dockerimg-hub.png)
 
-#### Manifests Used:
+### Kubernetes Manifests
 
-mongodb-deployment.yml (MongoDB Pod)
+The following Kubernetes objects were used:
 
-mongodb-pvc.yml (Persistent Volume for MongoDB)
+Deployment: Runs the Task Manager API
 
-mongodb-svc.yml (MongoDB Service)
+Service: Exposes the API (Type: NodePort)
 
-deployment.yml (Task Manager App Deployment)
+MongoDB Deployment & Service: Runs MongoDB and exposes it internally.
 
-svc.yml (Service for Task Manager App)
+Persistent Volume: Ensures MongoDB data persists.
+
+```bash
+k get all
+```
+![l](SCREENSHOTS/manifest-list.png)
+![apply](SCREENSHOTS/get-all.png)
+
+### API Testing (cURL)
+
+Ping API
+
+```bash
+curl -X GET http://<MINIKUBE-IP>:<PORT>/tasks/ping
+```
+![ping](SCREENSHOTS/ping.png)
+
+POST a Task
+
+```bash
+curl -X POST http://<MINIKUBE-IP>:<PORT>/tasks \
+     -H "Content-Type: application/json" \
+     -d '{
+           "id": "123",
+           "name": "K8s Task",
+           "owner": "Priyaranjan",
+           "command": "echo Kubernetes Running!"
+         }'
+```
+![postt](SCREENSHOTS/post-check.png)
+
+### BusyBox Pod Execution
+
+A BusyBox pod is dynamically created to execute each task instead of running commands locally.
+
+**Task Execution Process:**
+> A BusyBox pod is created dynamically when a task is executed.
+
+> The task command runs inside the BusyBox pod
+
+> The logs from the BusyBox pod are retrieved and stored in MongoDB.
 
 
-#### Commands used:
-    
-    alias k=kubectl
-    k apply -f .
-    k get all
-    k describe po/<pod-name>
-    k get node -o wide
-    k delete po/<mongo-pod-name>
-    k exec -it <mongo-db-pod> -- mongosh "mongodb://admin:password@mongodb-service:27017/taskdb?authSource=admin" //connect to the mongosh
-    db.tasks.find().pretty() // to view if the data still exists even after the pod restarts.
+```bash
+k get event --sort-by=.metadata.creationTimestamp | tail -n 6
+k logs <podname>
+```
+![BusyBox](SCREENSHOTS/busybox-creation.png)
+![BusyBox2](SCREENSHOTS/busybox-creation2.png)
+
+### MongoDB Data Persistence (Persistent Volume - PV)
+
+A Persistent Volume (PV) is used to store MongoDB data even after the pod is deleted.
+
+**Testing Process:**
+
+Delete the MongoDB Pod.
+```bash
+k describe pvc/<mongo-pvc>
+k delete po/<mongo-pod-name>
+```
+The ReplicaSet ensures that the pod is recreated successfully
+
+Check if the data still exists in MongoDB
+
+```bash
+k get pod
+k exec -it <mongo-db-pod> -- mongosh "mongodb://admin:password@mongodb-service:27017/taskdb?authSource=admin" //mongosh
+db.tasks.find().pretty() // to view if the data still exists even after the pod restarts.
+```
+![pvc](SCREENSHOTS/mongo-pvc.png)
+![pvc2](SCREENSHOTS/mongo-pvc2.png)
+![pvc3](SCREENSHOTS/mongo-pvc3.png)
+
