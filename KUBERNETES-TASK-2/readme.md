@@ -31,13 +31,13 @@ docker push myrepo/taskmanager:latest
 
 The following Kubernetes objects were used:
 
-> Deployment: Runs the Task Manager API
+- Deployment: Runs the Task Manager API
 
-> Service: Exposes the API (Type: NodePort)
+- Service: Exposes the API (Type: NodePort)
 
-> MongoDB Deployment & Service: Runs MongoDB and exposes it internally.
+- MongoDB Deployment & Service: Runs MongoDB and exposes it internally.
 
-> Persistent Volume: Ensures MongoDB data persists.
+- Persistent Volume: Ensures MongoDB data persists.
 
 ```bash
 k get all
@@ -73,11 +73,11 @@ curl -X POST http://<MINIKUBE-IP>:<PORT>/tasks \
 A BusyBox pod is dynamically created to execute each task instead of running commands locally.
 
 **Task Execution Process:**
-> A BusyBox pod is created dynamically when a task is executed.
+- A BusyBox pod is created dynamically when a task is executed.
 
-> The task command runs inside the BusyBox pod
+- The task command runs inside the BusyBox pod
 
-> The logs from the BusyBox pod are retrieved and stored in MongoDB.
+- The logs from the BusyBox pod are retrieved and stored in MongoDB.
 
 
 ```bash
