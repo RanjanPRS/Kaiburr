@@ -1,4 +1,5 @@
 FROM openjdk:17-jdk-slim
+#FROM gcr.io/distroless/java17-debian11:nonroot // TO OPTIMIZE THE IMG SIZE
 
 WORKDIR /app
 

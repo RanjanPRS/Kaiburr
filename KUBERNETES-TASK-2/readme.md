@@ -1,6 +1,6 @@
 # Kubernetes Deployment - Task 2
 
-This part involves containerizing the Task Manager App and deploying it to Kubernetes. The application runs inside a Minikube cluster and uses a BusyBox pod to execute tasks dynamically. MongoDB is deployed with Persistent Volumes (PV) to ensure data consistency.
+This part involves containerizing the Task Manager App and deploying it to Kubernetes. The application runs inside a Minikube cluster. Furthermore the implementation of the application was modified to use a BusyBox pod to execute tasks dynamically instead of running them locally. MongoDB is deployed with Persistent Volumes (PV) to ensure data consistency.
 
 ### Cluster Setup
 
@@ -26,6 +26,17 @@ docker push myrepo/taskmanager:latest
 ```
 ![build](SCREENSHOTS/dockerbuild-cmd.png)
 ![img](SCREENSHOTS/dockerimg-hub.png)
+
+Further optimized the Docker image by using a Distroless Base image.
+
+![opt](SCREENSHOTS/opt.png)
+
+**BENEFITS:**
+- Drastically smaller in size.
+- More secure as distroless has no package manager, no shell, and fewer attack vectors.
+- Faster startup as the size is minimal.
+
+**Base Image used: 'gcr.io/distroless/java17-debian11:nonroot'**
 
 ### Kubernetes Manifests
 
@@ -114,5 +125,7 @@ db.tasks.find().pretty() // to view if the data still exists even after the pod 
 ### Conclusion:
 
 > The Task Manager app was successfully containerized and deployed on Minikube.
-> BusyBox pods were used to dynamically execute tasks.
+
 > MongoDB data persisted even after pod deletion using Persistent Volumes.
+
+> Furthermore the application was modified to utilize BusyBox pods to dynamically execute tasks.
