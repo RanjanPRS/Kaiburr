@@ -39,7 +39,6 @@ Shows actual vs. predicted categories.
 
 ###  Error Distribution Plot  
 Analyzes misclassified complaints.  
-_Example output:_  
 ![Error](SCREENSHOTS/error.png)
 
 ---
